@@ -1,0 +1,52 @@
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // Lombok
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+        annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+
+        // Spock test framework
+        implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.8'
+        testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.0-groovy-3.0'
+        implementation group: 'cglib', name: 'cglib-nodep', version: '3.2.4'
+        testImplementation group: 'com.athaydes', name: 'spock-reports', version: '2.0-groovy-3.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+//        // logging
+//        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.5.4'
+    }
+
+//    configurations {
+//        all {
+//            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+//        }
+//    }
+//
+    test {
+        useJUnitPlatform()
+    }
+
+    // gradle 내에 모든 source set을 출력한다. 디폴트 source set은 src/main, src/test 이다.
+    // 직접, source set을 추가하면 추가된 source set도 나오게 된다.
+    task printSourceSetInformation(){
+        doLast{
+            sourceSets.each { srcSet ->
+                println "["+srcSet.name+"]"
+                print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
+                print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
+                println ""
+            }
+        }
+    }
+
+}

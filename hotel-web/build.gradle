@@ -1,0 +1,75 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group 'example.spring.hotel.web'
+version '1.0-SNAPSHOT'
+
+// integration, functional test 설정
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.test.runtimeClasspath
+        runtimeClasspath += sourceSets.test.runtimeClasspath
+
+        groovy    {
+            srcDir file('src/integration-test/groovy')
+        }
+        java    {
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+    functionalTest {
+        compileClasspath += sourceSets.test.runtimeClasspath
+        runtimeClasspath += sourceSets.test.runtimeClasspath
+        groovy    {
+            srcDir file('src/functional-test/groovy')
+        }
+        java    {
+            srcDir file('src/functional-test/java')
+        }
+        resources.srcDir file('src/functional-test/resources')
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    // spring active profile 설정
+    if(project.hasProperty('production'))  {
+        systemProperty "spring.profiles.active", "production"
+    } else if(project.hasProperty('develop'))   {
+        systemProperty "spring.profiles.active", "develop"
+    } else  {
+        systemProperty "spring.profiles.active", "local"
+    }
+}
+
+task functionalTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+    // spring active profile 설정
+    if(project.hasProperty('production'))  {
+        systemProperty "spring.profiles.active", "production"
+    } else if(project.hasProperty('develop'))   {
+        systemProperty "spring.profiles.active", "develop"
+    } else  {
+        systemProperty "spring.profiles.active", "local"
+    }
+}
+
+dependencies {
+    implementation (project(':hotel-domain'))
+    implementation (project(':hotel-infra'))
+    implementation 'org.springframework:spring-tx:5.3.9'
+    // web application config
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.4'
+    // spring & spock test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+}

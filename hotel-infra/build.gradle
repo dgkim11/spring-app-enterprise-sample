@@ -1,0 +1,71 @@
+
+// integration, functional test 설정
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.test.runtimeClasspath
+        runtimeClasspath += sourceSets.test.runtimeClasspath
+
+        groovy    {
+            srcDir file('src/integration-test/groovy')
+        }
+        java    {
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+    functionalTest {
+        compileClasspath += sourceSets.test.runtimeClasspath
+        runtimeClasspath += sourceSets.test.runtimeClasspath
+        groovy    {
+            srcDir file('src/functional-test/groovy')
+        }
+        java    {
+            srcDir file('src/functional-test/java')
+        }
+        resources.srcDir file('src/functional-test/resources')
+    }
+}
+
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    if(project.hasProperty('production'))  {
+        systemProperty "spring.profiles.active", "production"
+    } else if(project.hasProperty('develop'))   {
+        systemProperty "spring.profiles.active", "develop"
+    } else  {
+        systemProperty "spring.profiles.active", "local"
+    }
+}
+
+
+task functionalTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+
+    if(project.hasProperty('production'))  {
+        systemProperty "spring.profiles.active", "production"
+    } else if(project.hasProperty('develop'))   {
+        systemProperty "spring.profiles.active", "develop"
+    } else  {
+        systemProperty "spring.profiles.active", "local"
+    }
+}
+
+
+check.dependsOn integrationTest
+
+dependencies {
+    implementation (project(':hotel-domain'))
+    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+    implementation 'mysql:mysql-connector-java:8.0.26'
+    implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+}
+
