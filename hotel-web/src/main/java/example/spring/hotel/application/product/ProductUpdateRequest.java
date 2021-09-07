@@ -1,6 +1,6 @@
 package example.spring.hotel.application.product;
 
-import example.spring.hotel.domain.product.ProductOption;
+import example.spring.hotel.domain.model.product.ProductOption;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

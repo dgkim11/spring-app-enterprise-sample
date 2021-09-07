@@ -7,7 +7,7 @@ plugins {
 group 'example.spring.hotel.web'
 version '1.0-SNAPSHOT'
 
-// integration, functional test 설정
+// integration, functional test sourceSets 설정
 sourceSets {
     integrationTest {
         compileClasspath += sourceSets.test.runtimeClasspath
@@ -38,6 +38,10 @@ task integrationTest(type: Test) {
     useJUnitPlatform()
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
+
+    // integration test를 위한 spock report 위치
+    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-integration-test-reports'
+
     // spring active profile 설정
     if(project.hasProperty('production'))  {
         systemProperty "spring.profiles.active", "production"
@@ -52,6 +56,10 @@ task functionalTest(type: Test) {
     useJUnitPlatform()
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
+
+    // functional test를 위한 spock report 위치
+    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-functional-test-reports'
+
     // spring active profile 설정
     if(project.hasProperty('production'))  {
         systemProperty "spring.profiles.active", "production"
@@ -62,10 +70,16 @@ task functionalTest(type: Test) {
     }
 }
 
+// unit test를 위한 spock report 위치
+test    {
+    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-unit-test-reports'
+}
+
 dependencies {
     implementation (project(':hotel-domain'))
     implementation (project(':hotel-infra'))
     implementation 'org.springframework:spring-tx:5.3.9'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.4'
     // web application config
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.5.4'

@@ -11,6 +11,8 @@ classes/
 out/
 buildSrc/
 bin/
+logs/
+log/
 build/
 */src/generated/
 *.iml

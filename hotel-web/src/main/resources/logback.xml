@@ -7,7 +7,7 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+                %white(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
             </Pattern>
         </layout>
     </appender>
@@ -38,10 +38,11 @@
         <appender-ref ref="Console" />
     </root>
 
-    <!-- LOG "com.baeldung*" at TRACE level -->
-    <logger name="com.baeldung" level="trace" additivity="false">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
-    </logger>
+<!--    아래처럼 특정 패키지에 대해서 로그 레벨을 달리할 수 있다.-->
+<!--    &lt;!&ndash; LOG "com.springframework*" at TRACE level &ndash;&gt;-->
+<!--    <logger name="org.springframework" level="trace" additivity="false">-->
+<!--        <appender-ref ref="RollingFile" />-->
+<!--        <appender-ref ref="Console" />-->
+<!--    </logger>-->
 
 </configuration>

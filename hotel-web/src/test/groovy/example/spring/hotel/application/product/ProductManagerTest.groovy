@@ -1,8 +1,8 @@
 package example.spring.hotel.application.product
 
 import example.spring.hotel.application.product.exception.InvalidProductException
-import example.spring.hotel.domain.product.Product
-import example.spring.hotel.domain.product.ProductRepository
+import example.spring.hotel.domain.model.product.Product
+import example.spring.hotel.domain.model.product.ProductRepository
 import spock.lang.Specification
 
 /**

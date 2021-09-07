@@ -3,5 +3,5 @@ spring:
     prefix: classpath:templates/
     suffix: .html
     cache: false
-    mode: HTML5
+    mode: HTML
     check-template-location: true
