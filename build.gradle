@@ -5,7 +5,7 @@ plugins {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'groovy'
-    apply plugin: 'pmd'
+    //apply plugin: 'pmd'
 
     repositories {
         mavenCentral()
@@ -30,6 +30,8 @@ subprojects {
 
     test {
         useJUnitPlatform()
+// unit test를 위한 spock report 위치
+        systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-unit-test-reports'
     }
 
     // gradle 내에 모든 source set을 출력한다. 디폴트 source set은 src/main, src/test 이다.

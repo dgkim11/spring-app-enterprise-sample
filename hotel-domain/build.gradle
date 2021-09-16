@@ -1,27 +1,27 @@
-// integration, functional test 설정
+// integration, functional test sourceSets 설정
 sourceSets {
-    integrationTest {
+    functionalTest {
         compileClasspath += sourceSets.test.runtimeClasspath
         runtimeClasspath += sourceSets.test.runtimeClasspath
-
         groovy    {
-            srcDir file('src/integration-test/groovy')
+            srcDir file('src/functional-test/groovy')
         }
         java    {
-            srcDir file('src/integration-test/java')
+            srcDir file('src/functional-test/java')
         }
-        resources.srcDir file('src/integration-test/resources')
+        resources.srcDir file('src/functional-test/resources')
     }
 }
 
-task integrationTest(type: Test) {
+task functionalTest(type: Test) {
     useJUnitPlatform()
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
 
-    // integration test를 위한 spock report 위치
-    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-integration-test-reports'
+    // functional test를 위한 spock report 위치
+    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-functional-test-reports'
 
+    // spring active profile 설정
     if(project.hasProperty('production'))  {
         systemProperty "spring.profiles.active", "production"
     } else if(project.hasProperty('develop'))   {
@@ -33,11 +33,10 @@ task integrationTest(type: Test) {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.4'
-    //implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.1.Final'
-    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
-    implementation 'mysql:mysql-connector-java:8.0.26'
     implementation 'org.springframework.boot:spring-boot-starter:2.5.4'
-    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.0'
+
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
 }

@@ -1,0 +1,46 @@
+// integration, functional test 설정
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.test.runtimeClasspath
+        runtimeClasspath += sourceSets.test.runtimeClasspath
+
+        groovy    {
+            srcDir file('src/integration-test/groovy')
+        }
+        java    {
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    // integration test를 위한 spock report 위치
+    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-integration-test-reports'
+
+    if(project.hasProperty('production'))  {
+        systemProperty "spring.profiles.active", "production"
+    } else if(project.hasProperty('develop'))   {
+        systemProperty "spring.profiles.active", "develop"
+    } else  {
+        systemProperty "spring.profiles.active", "local"
+    }
+}
+
+dependencies {
+    implementation (project(':hotel-domain'))
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.0'
+    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+    implementation 'mysql:mysql-connector-java:8.0.26'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -17,13 +17,13 @@ import java.util.List;
  */
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product implements DomainEntity {
     private Long productId;
 
-    private @NotBlank String productName;
-    private @Positive long price;
+    private String productName;
+    private long price;
     private LocalDateTime startSaleDateTime;
     private LocalDateTime endSaleDateTime;
     @Builder.Default
@@ -31,7 +31,6 @@ public class Product implements DomainEntity {
     @Builder.Default
     private List<ProductOption> productOptions = new ArrayList<>();
     private String contents;
-    private @NotNull LocalDateTime createdAt;
     private boolean outOfStock;
 
     public void addProductOption(ProductOption option)  {

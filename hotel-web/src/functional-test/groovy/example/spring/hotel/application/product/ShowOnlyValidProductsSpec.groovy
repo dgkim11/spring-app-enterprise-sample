@@ -23,7 +23,7 @@ class ShowOnlyValidProductsSpec extends Specification{
         String productName = "ShowOnlyValidProductsSpec.판매종료상품"
         given: "판매 종료 날짜가 이틀 지난 상품이다."
         productManager.addNewProduct(new Product(
-                productName: productName, endSaleDateTime: LocalDateTime.now().minusDays(2), validProduct: true, categoryId: 1, createdAt: LocalDateTime.now()))
+                productName: productName, endSaleDateTime: LocalDateTime.now().minusDays(2), validProduct: true))
 
         when: "가용한 상품 목록 가져온다"
         List<Product> products = productFinder.findAllValidProductsWithoutOptions()
@@ -40,7 +40,7 @@ class ShowOnlyValidProductsSpec extends Specification{
 
         given: "판매 종료 날짜가 없는 무기한 판매 상품 등록"
         productManager.addNewProduct(
-                new Product(productName: productName, validProduct: true, categoryId: 1, createdAt: LocalDateTime.now()))
+                new Product(productName: productName, validProduct: true))
 
         when: "가용한 상품 목록 가져온다"
         List<Product> products = productFinder.findAllValidProductsWithoutOptions()
@@ -57,8 +57,7 @@ class ShowOnlyValidProductsSpec extends Specification{
 
         given: "판매날짜가 없는 상품 등록"
         productManager.addNewProduct(
-                new Product(productName: productName, endSaleDateTime: LocalDateTime.now().plusDays(10),
-                        validProduct: true, categoryId: 1, createdAt: LocalDateTime.now()))
+                new Product(productName: productName, endSaleDateTime: LocalDateTime.now().plusDays(10), validProduct: true))
 
         when: "가용한 상품 목록 가져온다"
         List<Product> products = productFinder.findAllValidProductsWithoutOptions()
@@ -74,8 +73,7 @@ class ShowOnlyValidProductsSpec extends Specification{
         String productName = "ShowOnlyValidProductsSpec.invalid상품"
 
         given: "invalid한 상품으로 변경"
-        Product product = productManager.addNewProduct(
-                new Product(productName: productName, validProduct: true, categoryId: 1, createdAt: LocalDateTime.now()))
+        Product product = productManager.addNewProduct(new Product(productName: productName, validProduct: true))
         productManager.invalidateProduct(product.getProductId())
 
         when: "가용한 상품 목록 가져온다"
@@ -94,7 +92,7 @@ class ShowOnlyValidProductsSpec extends Specification{
         given: "판매 기간이 아닌 상품이다"
         productManager.addNewProduct(
                 new Product(productName: productName, startSaleDateTime: LocalDateTime.now().plusDays(10),
-                        endSaleDateTime: LocalDateTime.now().plusDays(20), categoryId: 1, createdAt: LocalDateTime.now()))
+                        endSaleDateTime: LocalDateTime.now().plusDays(20)))
 
         when: "가용한 상품 목록 가져온다"
         List<Product> products = productFinder.findAllValidProductsWithoutOptions()
@@ -111,7 +109,7 @@ class ShowOnlyValidProductsSpec extends Specification{
 
         given: "상품이 품절되었다"
         Product product = productManager.addNewProduct(
-                new Product(productName: productName, categoryId: 1, createdAt: LocalDateTime.now()))
+                new Product(productName: productName))
          productManager.invalidateProduct(product.getProductId())
 
         when: "가용한 상품 목록 가져온다"

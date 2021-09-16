@@ -1,6 +1,7 @@
 package example.spring.hotel.domain.model.bookingcart;
 
 import example.spring.hotel.domain.model.DomainEntity;
+import example.spring.hotel.domain.model.product.Product;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -15,12 +16,16 @@ import java.util.List;
 public class BookingCartItem implements DomainEntity  {
     private Long cartItemId;
     private @NotNull Long customerId;
-    private @NotNull Long productId;
+    private @NotNull Product product;
     @Builder.Default
     private List<BookingCartItemOption> productOptions = new ArrayList<>();
     private @NotNull LocalDateTime bookingDateTime;
 
     public void addBookingCartItemOption(BookingCartItemOption itemOption)  {
         productOptions.add(itemOption);
+    }
+
+    protected void setCustomerId(Long customerId)   {
+        this.customerId = customerId;
     }
 }

@@ -70,14 +70,9 @@ task functionalTest(type: Test) {
     }
 }
 
-// unit test를 위한 spock report 위치
-test    {
-    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-unit-test-reports'
-}
-
 dependencies {
     implementation (project(':hotel-domain'))
-    implementation (project(':hotel-infra'))
+    implementation (project(':hotel-domain-infra'))
     implementation 'org.springframework:spring-tx:5.3.9'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.4'
     // web application config

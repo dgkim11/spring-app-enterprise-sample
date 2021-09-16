@@ -1,6 +1,6 @@
 package example.spring.hotel.application.functionaltest.helper;
 
-import example.spring.hotel.domain.infrastructure.mybatis.product.ProductMapper;
+import example.spring.hotel.infrastructure.domain.mybatis.product.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

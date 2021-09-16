@@ -1,8 +1,8 @@
 rootProject.name = 'spring-app-template'
 include 'hotel-domain'
-include 'hotel-infra'
 include 'hotel-web'
 include 'hotel-api'
 include 'hotel-batch'
 include 'hotel-common'
+include 'hotel-domain-infra'
 

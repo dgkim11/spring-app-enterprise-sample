@@ -1,8 +1,5 @@
 package example.spring.hotel.domain.model;
 
-import example.spring.hotel.domain.model.product.Product;
-
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,8 +11,5 @@ import java.util.Optional;
 public interface BaseRepository<T, ID> {
     Optional<T> findById(ID id);
     int deleteById(ID id);
-    void save(T entity);
-    long count();
-    void deleteAll();
-    List<Product> findAll();    // sample이라서 만든 method.실제 production에서는 이런 메소드가 있으면 안된다. OOM 발생가능. Iterable로 구현해야 함.
+    void insert(T entity);
 }

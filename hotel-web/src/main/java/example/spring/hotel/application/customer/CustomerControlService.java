@@ -13,7 +13,7 @@ public class CustomerControlService {
     }
 
     public Customer addCustomer(Customer customer)  {
-        customerRepository.save(customer);
+        customerRepository.insert(customer);
         return customer;
     }
 

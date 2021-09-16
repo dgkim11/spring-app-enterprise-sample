@@ -30,7 +30,7 @@ public class ProductManager {
         for(ProductOption option : options)   {
             product.addProductOption(option);
         }
-        productRepository.saveProductOptions(product.getProductOptions());
+        productRepository.insertProductOptions(product.getProductOptions());
         return product;
     }
 
@@ -40,7 +40,7 @@ public class ProductManager {
         if(! productRepository.findByProductName(product.getProductName()).isEmpty())  {
             throw new InvalidProductException("동일한 상품이 존재합니다. 상품명: " + product.getProductName());
         }
-        productRepository.save(product);
+        productRepository.insert(product);
         return product;
     }
 
@@ -50,7 +50,7 @@ public class ProductManager {
         if(productOptional.isEmpty()) throw new ProductNotFoundException("productId: " + productId);
         Product product = productOptional.get();
         product.invalateProduct();
-        productRepository.save(product);
+        productRepository.insert(product);
     }
 
     @Transactional
