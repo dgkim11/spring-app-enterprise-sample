@@ -1,5 +1,6 @@
 package example.spring.hotel.domain.service.event
 
+import example.spring.hotel.domain.model.payment.Payment
 import example.spring.hotel.domain.service.event.exception.AlreadyExistEventChannelException
 import example.spring.hotel.domain.service.event.payment.PaymentSuccessEvent
 import spock.lang.Specification
@@ -35,10 +36,10 @@ class DefaultEventBrokerTest extends Specification  {
         eventBroker.subscribe(PaymentSuccessEvent.getEventKey(), consumer)
 
         when: "event를 발송한다."
-        eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(),  new PaymentSuccessEvent(paymentId: 1234L))
+        eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(),  new PaymentSuccessEvent(new Payment(paymentId: 1234L)))
 
         then: "event를 받는다."
-        consumer.event.getPaymentId() == 1234L
+        consumer.event.getPayment().getPaymentId() == 1234L
     }
 
     def "모든 consumer들에게 event를 동일하게 발송한다."()    {
@@ -54,12 +55,12 @@ class DefaultEventBrokerTest extends Specification  {
         eventBroker.subscribe(PaymentSuccessEvent.getEventKey(), consumer3)
 
         when: "event를 발송한다."
-        eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(),  new PaymentSuccessEvent(paymentId: 1234L))
+        eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(),  new PaymentSuccessEvent(new Payment(paymentId: 1234L)))
 
         then: "모든 consumer들이 동일 event를 받는다."
-        consumer1.event.getPaymentId() == 1234L
-        consumer2.event.getPaymentId() == 1234L
-        consumer3.event.getPaymentId() == 1234L
+        consumer1.event.getPayment().getPaymentId() == 1234L
+        consumer2.event.getPayment().getPaymentId() == 1234L
+        consumer3.event.getPayment().getPaymentId() == 1234L
     }
 
     def "event를 unsubscribe하는 경우 event를 받지 않는다."()  {
@@ -73,7 +74,7 @@ class DefaultEventBrokerTest extends Specification  {
         eventBroker.unSubscribe(PaymentSuccessEvent.getEventKey(), consumer)
 
         when: "event를 발송한다."
-        eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(), new PaymentSuccessEvent(paymentId: 1234L))
+        eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(),  new PaymentSuccessEvent(new Payment(paymentId: 1234L)))
 
         then: "해당 consumer는 event를 받지 않는다."
         consumer.event == null

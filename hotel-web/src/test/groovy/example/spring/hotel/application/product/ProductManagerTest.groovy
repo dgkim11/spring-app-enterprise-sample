@@ -18,7 +18,7 @@ class ProductManagerTest extends Specification {
         ProductManager productManager = new ProductManager(repository)
 
         when: "같은 상품명으로 신규 상품을 추가한다."
-        productManager.addNewProduct(new Product(productName: productName), null)
+        productManager.createNewProduct(new Product(productName: productName), null)
 
         then: "InvalidProductException을 발생시킨다"
         thrown(InvalidProductException)

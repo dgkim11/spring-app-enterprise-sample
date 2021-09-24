@@ -45,11 +45,11 @@ public class HotelAppInfraDatabaseConfig {
 
         return sqlSessionFactory.getObject();
     }
-
-    @Bean
-    public SqlSession sqlSession(SqlSessionFactory sqlSessionFactory)   {
-        return new SqlSessionTemplate(sqlSessionFactory);
-    }
+// Note. 해당 bean은 생성하지 않아도 spring mybatis starter에서 직접 생성하는 듯. 아래의 bean을 생성하면 같은 bean이 두개라며 에러가 남.
+//    @Bean
+//    public SqlSession sqlSession(SqlSessionFactory sqlSessionFactory)   {
+//        return new SqlSessionTemplate(sqlSessionFactory);
+//    }
 
     @Bean
     public DataSourceTransactionManager transactionManager(DataSource dataSource)   {

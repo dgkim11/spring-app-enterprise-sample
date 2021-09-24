@@ -3,5 +3,4 @@
 <properties>
     <entry key="datasource.username">mysqluser</entry>
     <entry key="datasource.password">MySql!3@4</entry>
-    <entry key="domain.event.broker">example.spring.hotel.infrastructure.domain.service.event.KafkaEventBroker</entry>
 </properties>

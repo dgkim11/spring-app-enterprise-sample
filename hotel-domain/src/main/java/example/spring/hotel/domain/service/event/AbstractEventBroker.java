@@ -8,7 +8,6 @@ import java.util.Map;
 
 public abstract class AbstractEventBroker implements EventBroker {
     private Map<String, EventChannel> eventChannelMap = new HashMap<>();
-    private static EventBroker eventBroker;
 
     @Override
     public void createEventChannel(String eventKey) throws AlreadyExistEventChannelException {

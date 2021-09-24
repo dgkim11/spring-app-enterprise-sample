@@ -31,7 +31,8 @@ public class Product implements DomainEntity {
     @Builder.Default
     private List<ProductOption> productOptions = new ArrayList<>();
     private String contents;
-    private boolean outOfStock;
+    @Builder.Default
+    private boolean outOfStock = false;
 
     public void addProductOption(ProductOption option)  {
         if(productId == null) throw new EntityValidationException("productId가 null입니다.");

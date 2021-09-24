@@ -7,11 +7,14 @@ import lombok.*;
  */
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductOption {
-    private String optionId;
+    private Long optionId;
+    @NonNull
     private Long productId;
+    @NonNull
     private String optionName;
     private String description;
 

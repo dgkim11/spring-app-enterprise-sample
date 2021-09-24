@@ -2,6 +2,7 @@ package example.spring.hotel.domain.service.event;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 /**
  * Guava의 event bus를 이용해서 구현한다.
  */
+@Component
 public class DefaultEventBroker extends AbstractEventBroker {
     @Override
     protected EventChannel createSpecificEventChannel() {

@@ -8,6 +8,7 @@ import example.spring.hotel.domain.model.product.ProductRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +17,20 @@ import java.util.Optional;
 public class CheckoutRepositoryImpl implements CheckoutRepository {
     private CheckoutMapper mapper;
     private ProductRepository productRepository;
+    private Field checkoutItemIdField;
+    private Field checkoutIdField;
 
     public CheckoutRepositoryImpl(CheckoutMapper mapper, ProductRepository productRepository)    {
         this.mapper = mapper;
         this.productRepository = productRepository;
+        try {
+            checkoutItemIdField = CheckoutProductOption.class.getDeclaredField("checkoutItemId");
+            checkoutItemIdField.setAccessible(true);
+            checkoutIdField = CheckoutItem.class.getDeclaredField("checkoutId");
+            checkoutIdField.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -48,37 +59,53 @@ public class CheckoutRepositoryImpl implements CheckoutRepository {
     }
 
     private CheckoutItem generateCheckoutItem(CheckoutItemRow itemRow) {
-        List<CheckoutProductOptionRow> optionRows = mapper.findCheckoutProductOptions(itemRow.getCheckoutItemId());
+        List<CheckoutProductOption> options = mapper.findCheckoutProductOptions(itemRow.getCheckoutItemId());
         return CheckoutItem.builder()
+                .checkoutId(itemRow.getCheckoutId())
                 .checkoutItemId(itemRow.getCheckoutItemId())
                 .bookingDateTime(itemRow.getBookingDateTime())
                 .product(productRepository.findById(itemRow.getProductId()).get())
                 .productPrice(itemRow.getProductPrice())
-                .checkoutProductOptions(toCheckoutProductOptions(optionRows))
+                .checkoutProductOptions(options)
                 .build();
     }
 
-    private List<CheckoutProductOption> toCheckoutProductOptions(List<CheckoutProductOptionRow> optionRows) {
-        List<CheckoutProductOption> options = new ArrayList<>();
-        for(CheckoutProductOptionRow optionRow : optionRows)    {
-            options.add(new CheckoutProductOption(optionRow.getProductOptionId(), optionRow.getOptionPrice()));
+    @Override
+    public int deleteById(Long checkoutId) {
+        return mapper.deleteById(checkoutId);
+    }
+
+    @Override
+    @Transactional
+    public void insert(Checkout checkout) {
+        mapper.insertCheckout(checkout);
+        for(CheckoutItem checkoutItem : checkout.getCheckoutItems())    {
+            mapper.insertCheckoutItem(setCheckoutIdField(checkout.getCheckoutId(), checkoutItem));
+            insertCheckoutProductOptions(setCheckoutItemId(checkoutItem.getCheckoutItemId(), checkoutItem.getCheckoutProductOptions()));
         }
-        return options;
     }
 
-    @Override
-    @Transactional
-    public int deleteById(Long aLong) {
-        return 0;
+    private List<CheckoutProductOption> setCheckoutItemId(Long checkoutItemId, List<CheckoutProductOption> checkoutProductOptions) {
+        for(CheckoutProductOption option : checkoutProductOptions)  {
+            try {
+                checkoutItemIdField.set(option, checkoutItemId);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return checkoutProductOptions;
     }
 
-    @Override
-    @Transactional
-    public void insert(Checkout checkoutRow) {
-        mapper.insertCheckout(checkoutRow);
-        for(CheckoutItem checkoutItem : checkoutRow.getCheckoutItems())    {
-            mapper.insertCheckoutItem(checkoutItem);
-            insertCheckoutProductOptions(checkoutItem.getCheckoutProductOptions());
+    /**
+     * checkoutId는 Checkout 객체가 insert된 후에 생성되는 것이어서 CheckoutItem은 아직 checkoutId를 모른다.
+     * 이 상태에서 checkoutId를 넣어주기 위해서는 CheckoutItem이 readOnly이기 때문에 checkoutId 값을 주입해주어야 함.
+     */
+    private CheckoutItem setCheckoutIdField(Long checkoutId, CheckoutItem checkoutItem) {
+        try {
+            checkoutIdField.set(checkoutItem, checkoutId);
+            return checkoutItem;
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 

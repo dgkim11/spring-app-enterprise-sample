@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class BookingCart {
     private Long customerId;
     private List<BookingCartItem> bookingCartItems = new LinkedList<>();

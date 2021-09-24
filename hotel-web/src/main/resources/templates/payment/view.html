@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 성공</title>
+</head>
+<body th:object="${payment}">
+<tr>
+    <td>paymentId</td><td th:text="*{paymentId}"></td>
+    <td>customerId</td><td th:text="*{customerId}"></td>
+    <td>totalPrice</td><td th:text="*{totalPrice}"></td>
+</tr>
+<tr th:each="paymentInfo: ${paymentInfos}">
+    <td>paymentType</td><td th:text="${paymentInfo.paymentType}"></td>
+    <td>paymentType</td><td th:text="${paymentInfo.price}"></td>
+    <td>paymentType</td><td th:text="${paymentInfo.accountNumber}"></td>
+</tr>
+</body>
+</html>

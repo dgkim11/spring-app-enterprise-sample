@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -15,8 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Payment implements DomainEntity {
     private Long paymentId;
+    private Long customerId;
     private Long checkoutId;
-    private List<PaymentInfo> paymentInfos;
+    @Builder.Default
+    private List<PaymentInfo> paymentInfos = new LinkedList<>();
     private LocalDateTime paidDateTime;
     private long totalPrice;
 }

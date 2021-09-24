@@ -10,13 +10,15 @@ import java.util.List;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
 public class PurchasedOrder implements DomainEntity {
-    private Long orderId;
+    private Long purchasedOrderId;
+    private Long customerId;
     @Builder.Default
-    private List<PurchasedProduct> orderItems = new LinkedList<>();
+    private List<PurchasedProduct> purchasedProducts = new LinkedList<>();
     private long totalPrice;
-    private PaymentInfo paymentInfo;
+    @Builder.Default
+    private List<PaymentInfo> paymentInfoList = new LinkedList<>();
     private LocalDateTime purchasedDateTime;
 }

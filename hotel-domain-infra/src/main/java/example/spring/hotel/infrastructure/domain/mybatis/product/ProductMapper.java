@@ -14,16 +14,17 @@ public interface ProductMapper {
     @Insert(
             """
             insert into product (
-                productName, price, startSaleDateTime, endSaleDateTime, validProduct,contents)
+                productName, price, startSaleDateTime, endSaleDateTime, validProduct, outOfStock, contents)
             values (
                 #{productName}, #{price}, #{startSaleDateTime}, #{endSaleDateTime},
-                #{validProduct}, #{contents})
+                #{validProduct}, #{outOfStock}, #{contents}
+            )
             """
     )
     @Options(useGeneratedKeys = true, keyProperty = "productId")
     void insert(Product product);
 
-    @Delete("delete from product where productId = #{productId}")
+    @Delete("delete p, o from product p inner join productOption o on p.productId = o.productId where p.productId = #{productId}")
     int deleteById(Long productId);
     @Insert(
             """
@@ -56,11 +57,10 @@ public interface ProductMapper {
     // NOTE. functional 및 integration test를 위해서 만든 코드로서 product에서 사용하면 안됨.
     @Delete("delete from product where productName = #{productName}")
     int deleteProductByName(String productName);
-
-    @Delete("delete from productOption where productId = #{productId}")
-    int deleteProductOptionsByProductId(Long productId);
-
     // NOTE. functional 및 integration test를 위해서 만든 코드로서 product에서 사용하면 안됨.
-    @Delete("delete from productOption where productId in (select productId from product where productName = #{productName})")
-    int deleteProductOptionsByProductName(String productName);
+    @Delete("""
+    delete o from productOption o inner join product p 
+    where p.productId = o.productId and p.productName = #{productName}
+    """)
+    int deleteProductOptionsByName(String productName);
 }

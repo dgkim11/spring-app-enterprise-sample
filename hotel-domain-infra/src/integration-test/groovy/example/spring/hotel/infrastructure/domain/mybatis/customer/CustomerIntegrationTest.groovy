@@ -3,12 +3,13 @@ package example.spring.hotel.infrastructure.domain.mybatis.customer
 import example.spring.hotel.domain.config.HotelDomainConfig
 import example.spring.hotel.domain.model.customer.Customer
 import example.spring.hotel.domain.model.customer.CustomerRepository
-import example.spring.hotel.infrastructure.domain.config.HotelAppDomainInfraConfig
+import example.spring.hotel.infrastructure.domain.config.HotelDomainInfraConfig
+import example.spring.hotel.infrastructure.domain.config.IntegrationTestConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
-@ContextConfiguration(classes = [HotelDomainConfig.class, HotelAppDomainInfraConfig.class])
+@ContextConfiguration(classes = [HotelDomainConfig.class, HotelDomainInfraConfig.class, IntegrationTestConfig.class ])
 class CustomerIntegrationTest extends Specification  {
     @Autowired private CustomerRepository customerRepository
 

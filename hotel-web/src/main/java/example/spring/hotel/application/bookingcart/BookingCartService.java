@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,10 +33,10 @@ public class BookingCartService {
     }
 
     @Transactional
-    public BookingCart addToCart(Long customerId, Long productId) throws AddToCartException {
+    public BookingCart addToCart(Long customerId, Long productId, LocalDateTime bookingDateTime) throws AddToCartException {
         BookingCart bookingCart = generateBookingCart(customerId);
         BookingCartItem bookingCartItem = BookingCartItem.builder()
-                .bookingDateTime(LocalDateTime.now())
+                .bookingDateTime(bookingDateTime)
                 .customerId(customerId)
                 .product(productRepository.findById(productId).get())
                 .build();
@@ -47,20 +48,22 @@ public class BookingCartService {
     }
 
     @Transactional
-    public BookingCart addToCart(Long customerId, Long productId, Long optionId) throws AddToCartException   {
+    public BookingCart addToCart(Long customerId, Long productId, List<Long> optionIds, LocalDateTime bookingDateTime) throws AddToCartException   {
         BookingCart bookingCart = generateBookingCart(customerId);
         BookingCartItem cartItem = BookingCartItem.builder()
-                .bookingDateTime(LocalDateTime.now())
+                .bookingDateTime(bookingDateTime)
                 .customerId(customerId)
                 .product(productRepository.findById(productId).get())
                 .build();
 
         // bookingCartItem을 먼저 저장해야 cartItemId가 부여가 되기때문에 아래의 순서로 저장한다.
         bookingCartRepository.insertBookingCartItem(cartItem);
-        BookingCartItemOption itemOption = new BookingCartItemOption(cartItem.getCartItemId(), optionId);
-        bookingCartRepository.insertBookingCartItemOption(itemOption);
+        for(Long optionId : optionIds)  {
+            BookingCartItemOption itemOption = new BookingCartItemOption(cartItem.getCartItemId(), optionId);
+            bookingCartRepository.insertBookingCartItemOption(itemOption);
+            cartItem.addBookingCartItemOption(itemOption);
+        }
 
-        cartItem.addBookingCartItemOption(itemOption);
         bookingCart.addBookingCartItem(cartItem);
 
         return bookingCart;

@@ -3,9 +3,7 @@ package example.spring.hotel.infrastructure.domain.mybatis.checkout;
 import example.spring.hotel.domain.model.checkout.Checkout;
 import example.spring.hotel.domain.model.checkout.CheckoutItem;
 import example.spring.hotel.domain.model.checkout.CheckoutProductOption;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -16,13 +14,15 @@ public interface CheckoutMapper {
             values (#{customerId}, #{totalPrice}, #{checkoutDateTime})
             """
     )
+    @Options(useGeneratedKeys = true, keyProperty = "checkoutId")
     void insertCheckout(Checkout checkout);
 
     @Insert("""
-            insert into checkoutItem (checkoutId, productId, productPrice )
-            values(#{checkoutId}, #{productId}, #{productPrice})
+            insert into checkoutItem (checkoutId, productId, productPrice, bookingDateTime )
+            values(#{checkoutId}, #{product.productId}, #{productPrice}, #{bookingDateTime})
             """)
-    void insertCheckoutItem(CheckoutItem checkoutItems);
+    @Options(useGeneratedKeys = true, keyProperty = "checkoutItemId")
+    void insertCheckoutItem(CheckoutItem checkoutItem);
 
     @Insert("""
             insert into checkoutItemOption (checkoutItemId, productOptionId, optionPrice )
@@ -40,5 +40,23 @@ public interface CheckoutMapper {
             """)
     List<CheckoutItemRow> findCheckoutItemsByCheckoutId(Long checkoutId);
 
-    List<CheckoutProductOptionRow> findCheckoutProductOptions(Long checkoutItemId);
+    @Select("""
+            select * from checkoutItemOption where checkoutItemId = #{checkoutItemId}
+            """)
+    List<CheckoutProductOption> findCheckoutProductOptions(Long checkoutItemId);
+
+    @Delete("""
+            delete c, i, o from checkout c inner join checkoutItem i inner join checkoutItemOption o
+            on c.checkoutId = i.checkoutId and i.checkoutItemId = o.checkoutItemId
+            where c.checkoutId = #{checkoutId}
+            """)
+    int deleteById(Long checkoutId);
+
+    // NOTE. Integration, 또는 Functional Test용 메서드. production에서 사용하지 말것.
+    @Delete("""
+            delete c, i, o from checkout c inner join checkoutItem i inner join checkoutItemOption o
+            on c.checkoutId = i.checkoutId and i.checkoutItemId = o.checkoutItemId
+            where c.customerId = #{customerId}
+            """)
+    int deleteByCustomerId(Long customerId);
 }

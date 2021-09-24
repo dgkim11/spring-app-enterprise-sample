@@ -13,13 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("PaymentService")
 public class PaymentService {
-    private PaymentGatewayAdapter paymentGatewayAdapter;
+    private Map<String,PaymentGatewayAdapter> paymentGatewayMap = new HashMap<>();
     private EventBroker eventBroker;
 
-    public PaymentService(PaymentGatewayAdapter adapter, EventBroker eventBroker)    {
-        this.paymentGatewayAdapter = adapter;
+    public PaymentService(List<PaymentGatewayAdapter> adapters, EventBroker eventBroker)    {
+        adapters.forEach(adapter -> paymentGatewayMap.put(adapter.companyId(), adapter));
+
         try {
             this.eventBroker = eventBroker;
             eventBroker.createEventChannel(PaymentSuccessEvent.getEventKey());
@@ -28,13 +29,17 @@ public class PaymentService {
         }
     }
 
-    public Payment pay(Checkout checkout, List<PaymentInfo> paymentInfoList) throws PaymentException {
+    public Payment pay(String paymentCompanyId, Checkout checkout, List<PaymentInfo> paymentInfoList) throws PaymentException {
         validatePaymentInfo(checkout, paymentInfoList);
+        PaymentGatewayAdapter paymentGatewayAdapter = paymentGatewayMap.get(paymentCompanyId);
+        if(paymentGatewayAdapter == null) throw new PaymentException("존재하지 않는 PG사입니다 :" + paymentCompanyId);
+
         PaymentResult result = paymentGatewayAdapter.execute(checkout.getTotalPrice(), paymentInfoList);
         if(result.isSuccess())  {
             Payment payment = Payment.builder()
                     .paymentInfos(paymentInfoList)
                     .checkoutId(checkout.getCheckoutId())
+                    .customerId(checkout.getCustomerId())
                     .paidDateTime(LocalDateTime.now())
                     .totalPrice(checkout.getTotalPrice())
                     .build();
@@ -44,12 +49,13 @@ public class PaymentService {
                 // 좀 더 복잡한 내용은 Saga 패턴을 참조하기 바람.
                 eventBroker.sendEvent(PaymentSuccessEvent.getEventKey(), new PaymentSuccessEvent(payment));
             } catch (NotExistEventChannelException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
+
+            return payment;
+        } else  {
+            throw new PaymentException("결제 실패. message:" + result.getMessage());
         }
-
-        throw new PaymentException("결제 실패. message:" + result.getMessage());
-
     }
 
     private void validatePaymentInfo(Checkout checkout, List<PaymentInfo> paymentInfoList) throws PaymentException {

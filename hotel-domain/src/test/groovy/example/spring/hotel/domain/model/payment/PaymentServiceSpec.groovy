@@ -8,11 +8,12 @@ import example.spring.hotel.domain.service.event.EventBroker
 import spock.lang.Specification
 
 class PaymentServiceSpec extends Specification {
-    PaymentGatewayAdapter paymentGatewayAdapter = Stub(PaymentGatewayAdapter)
+    PaymentGatewayAdapter paymentGatewayAdapter = new TestPaymentGatewayAdapter()
     EventBroker eventBroker = Stub(EventBroker)
-    PaymentService paymentService = new PaymentService(paymentGatewayAdapter, eventBroker)
+    PaymentService paymentService
 
     def setup() {
+        paymentService = new PaymentService([paymentGatewayAdapter], eventBroker)
         paymentGatewayAdapter.execute(_,_) >> new PaymentResult(true, null)
     }
 
@@ -28,7 +29,7 @@ class PaymentServiceSpec extends Specification {
         PaymentInfo paymentInfo2 = new PaymentInfo(paymentType: PaymentType.CARD, price: 1000)
 
         when: "결재 수행"
-        paymentService.pay(checkout, [paymentInfo1, paymentInfo2])
+        paymentService.pay(paymentGatewayAdapter.companyId(), checkout, [paymentInfo1, paymentInfo2])
 
         then:
         PaymentException e = thrown()
@@ -44,10 +45,23 @@ class PaymentServiceSpec extends Specification {
         PaymentInfo paymentInfo2 = new PaymentInfo(paymentType: PaymentType.BANK, price: 1000)
 
         when: "결제를 수행한다."
-        paymentService.pay(checkout, [paymentInfo1, paymentInfo2])
+        paymentService.pay(paymentGatewayAdapter.companyId(), checkout, [paymentInfo1, paymentInfo2])
 
         then: "결제 실패"
         PaymentException e = thrown()
         e.getMessage() == "동일한 결제타입이 여러개 존재합니다."
+    }
+
+    private static class TestPaymentGatewayAdapter implements PaymentGatewayAdapter {
+
+        @Override
+        String companyId() {
+            return "testPayment"
+        }
+
+        @Override
+        PaymentResult execute(long totalPrice, List<PaymentInfo> paymentInfoList) {
+            return new PaymentResult(true, "")
+        }
     }
 }

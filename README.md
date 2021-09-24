@@ -116,36 +116,30 @@ Mock Server를 사용하여 가상의 외부 시스템을 구성할 수 있다.
 
 ### Functional Test
 이 테스트는 integration test보다도 상위에 있는 테스트로서 integration까지 포함하여 실제 business use case가 제대로 동작하는지를
-검증하는 테스트이다. 이 test는 하나의 business use case에 대한 spec을 정의한 문서의 역할을 하고 행위를 검증하는 역할을 한다.
-전체 기능 검증으로서 Mock 객체를 사용하지 않는다. 만약, 외부 시스템과의 연동이 현실적으로 불가능한 경우 Mock Server를 사용하여 가상의 외부 시스템을
-구성할 수 있다.
+검증하는 테스트이다. 전체 기능 검증으로서 Mock 객체를 사용하지 않는다. 만약, 외부 시스템과의 연동이 현실적으로 불가능한 경우 Mock Server를 사용하여
+가상의 외부 시스템을 구성할 수 있다.
 
 ### Acceptance Test
 이것은 가장 최상위의 테스트이다. 사전적인 의미로 접근한다면 functional test가 기능이 제대로 동작하는지를 검증하는 것이라면 UAT는 최종 사용자 관점에서 
 이 테스트의 결과가 사용자(고객)가 만족하는 결과인지를 보는 것이다. 따라서, 기능의 동작 뿐만 아니라 그 결과가 보여지는 UI 및 UX까지도 포함하는 더 크고
 넓은 테스트이다. 훨씬 더 비즈니스 관점에서 테스트의 결과를 평가하는 것이다. 그러나, 여기서는  WebMvc 레벨의 test를 accpetance test로 보도록 하자.
 
-### Test 클래스 이름
-* xxxSpec : functional test는 모두 xxxSpec이다. unit test 중에도 application layer에 해당하는 business use case를 테스트하는 경우
-  xxxSpec이다. 
-* xxxTest : integration test는 모두 xxxTest이다. unit test 중에 순수하게 class의 기능을 확인하는 경우 test이다. 
-
 ### Test 코드 작성 가이드
 * Test case 작성 순서
   * 첫째, 먼저 application layer에서 하나의 business use case에 대한 unit test case를 정의한다. 예제에서는 xxxSpec으로 끝나는 test들이다.
   이 test case를 작성하면서 관련 구현 코드를 application, domain, infra 등등에 구현한다. 그 다음으로는 business use case가 아니라 
   그 use case를 구성하고 있는 클래스들에 대한 단위 테스트를 만든다.
-  * 둘째, integration test를 작성한다. 주로 repository에 있는 메서드들이 원하는데로 데이타를 가져오거나 저장하는지를 확인한다.
-  * 셋째, functional test를 작성한다. 
-  * 넷째, MVC 모델에서 Controller를 테스트한다.
+  * 둘째, integration test를 작성한다. repository나 외부 시스템과의 연동이 제대로 되는지 테스트한다.
+  * 셋째, functional test로서 business use case에 대해서 가장 상위에서 가장 실제와 같은 환경에서 전체를 테스트하는 코드를 작성한다. 예로, MVC
+  의 Controller를 테스트하는 것이 여기에 해당한다. 실제로 애플리케이션이 로딩이 된 상태에서 테스트가 이루어진다. 
   
 * Test case 작성 핵심
   TDD에서 말하듯이 test case -> 구현 -> 리팩토링 형태로 하나의 test case와 관련된 코드만을 작성한다.하나의 test case를 작성하면서 구현되는 코드 
-  이외에는 추가적인 코드를 작성하지 않는다. 해당 test case와 무관한 로직을 생각났다고 바로 작성하게되면 그 부분은 나중에 test case에서 빠질 수 있다. 
+  이외에는 추가적인 코드를 작성하지 않는다. 해당 test case와 무관한 로직이 생각났다고 바로 작성하게되면 그 부분은 나중에 test case에서 빠질 수 있다. 
   현재의 test case에만 해당하는 코드만을 작성함으로써 test coverage에서 누락되는 코드가 없게된다. 또한, 이렇게 작성하면 개발할 때 한번에 너무 많은 
-  구현 로직을 머리속에 생각하느라 코드 구현이 어려워지는 문제도 해결된다. 지금, 작성중인 test case에만 집중힌다.
+  구현 로직을 머리속에 생각하느라 코드 구현이 어려워지는 문제도 해결된다. 지금, 작성중인 test case에만 집중함으로써 하나에만 집중할 수 있게 해준다.
 
-* 실패한 Test case가 지속적은 구현과 리팩토링으로 성공하였을 때의 짜릿함을 즐겨야 한다.
+* 실패한 Test case가 지속적인 구현과 리팩토링으로 성공하였을 때의 짜릿함을 즐겨야 한다.
   구현이 완료되지 않은 상태에서 test case를 먼저 작성한 후 수행하면 당연히 test case가 실패한다. 그랬던 test case를 하나하나 구현해가면서 코드가
   완성되가고 점점 test case가 성공에 가까워지는 것을 느끼면서 개발하면 즐거움이 더하다. 최종적으로 성공했을 때 녹색마크를 보면 짜릿함을 느끼게 된다.
 

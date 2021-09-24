@@ -1,27 +1,28 @@
-// integration, functional test sourceSets 설정
+// integration, functional test 설정
 sourceSets {
-    functionalTest {
+    integrationTest {
         compileClasspath += sourceSets.test.runtimeClasspath
         runtimeClasspath += sourceSets.test.runtimeClasspath
+
         groovy    {
-            srcDir file('src/functional-test/groovy')
+            srcDir file('src/integration-test/groovy')
         }
         java    {
-            srcDir file('src/functional-test/java')
+            srcDir file('src/integration-test/java')
         }
-        resources.srcDir file('src/functional-test/resources')
+        resources.srcDir file('src/integration-test/resources')
     }
 }
 
-task functionalTest(type: Test) {
+task integrationTest(type: Test) {
     useJUnitPlatform()
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
 
-    // functional test를 위한 spock report 위치
-    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-functional-test-reports'
+    // integration test를 위한 spock report 위치
+    systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-integration-test-reports'
 
-    // spring active profile 설정
+    // integration 및 functional test를 위한 spring active profile 설정
     if(project.hasProperty('production'))  {
         systemProperty "spring.profiles.active", "production"
     } else if(project.hasProperty('develop'))   {
@@ -30,6 +31,7 @@ task functionalTest(type: Test) {
         systemProperty "spring.profiles.active", "local"
     }
 }
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.4'

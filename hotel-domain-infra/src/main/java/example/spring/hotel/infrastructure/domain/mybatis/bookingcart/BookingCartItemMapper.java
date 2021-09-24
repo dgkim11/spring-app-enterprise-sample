@@ -26,24 +26,36 @@ public interface BookingCartItemMapper {
     int insertBookingCartItem(BookingCartItem bookingCartItem);
 
     @Insert("""
-            insert into bokingCartItemOption (
+            insert into bookingCartItemOption (
                 cartItemId, productOptionId)
             values (
                 #{cartItemId}, #{productOptionId}
             )
             """)
-    BookingCartItemOption insertBookingCartProductOption(BookingCartItemOption itemOption);
+    int insertBookingCartItemOption(BookingCartItemOption itemOption);
 
     // NOTE. 해당 메서드는 functional test를 위해 만든 메서드이니 production 코드에서는 사용하지 말것.
     @Delete("delete from bookingCartItem where customerId in (select customerId from customer where name = #{customerName})")
     int deleteBookingCartItemsByCustomerName(String customerName);
 
-    @Select("select * from bookingCartItem where customerId = #{customerId} and productId = #{productId}")
-    List<BookingCartItem> findByCustomerIdAndProductId(@Param("customerId") Long customerId, @Param("productId") Long productId);
+    @Delete("""
+            delete from bookingCartItem where customerId = #{customerId}                             
+            """)
+    int deleteBookingCartItemsByCustomerId(Long customerId);
 
-    @Delete("delete from bookingCartItem where customerId = #{customerId}")
-    int deleteBookingCartItemByCustomerId(Long customerId);
+    @Delete("""
+            delete from bookingCartItem where cartItemId = #{cartItemId}                             
+            """)
+    void deleteBookingCartItemByCartItemId(Long cartItemId);
 
-    @Delete("delete from bookingCartItemOption where cartItemId = #{cartItemId}")
-    int deleteBookingCartItemOptionByCartItemId(Long cartItemId);
+    @Delete("""
+            delete from bookingCartItemOption where cartItemId = #{cartItemId}
+            """)
+    void deleteBookingCartItemOptionsByCartItemId(Long cartItemId);
+
+    @Delete("""
+            delete o from bookingCartItemOption o inner join bookingCartItem i on o.cartItemId = i.cartItemId
+            where i.customerId = #{customerId}
+            """)
+    void deleteBookingCartItemOptionsByCustomerId(Long customerId);
 }

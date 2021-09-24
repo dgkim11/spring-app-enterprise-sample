@@ -57,12 +57,12 @@ class BookingCartServiceSpec extends Specification {
         productRepository.findById(_) >> Optional.of(product)
 
         when: "옵션과 함께 추가로 상품을 담는다."
-        BookingCart cartAdded = bookingCartService.addToCart(1L, 2000L, 10L)
+        BookingCart cartAdded = bookingCartService.addToCart(1L, 2000L, [10L], LocalDateTime.now())
 
         then: "추가 상품의 옵션 정보도 함께 담는다."
         cartAdded.getBookingCartItems().size() == 1
-        cartAdded.getBookingCartItems().get(0).getProductOptions().size() == 1
-        cartAdded.getBookingCartItems().get(0).getProductOptions().get(0).productOptionId == 10L
+        cartAdded.getBookingCartItems().get(0).getItemOptions().size() == 1
+        cartAdded.getBookingCartItems().get(0).getItemOptions().get(0).productOptionId == 10L
     }
 
     private BookingCart generateBookingCart()   {

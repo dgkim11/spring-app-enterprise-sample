@@ -89,3 +89,34 @@ create table checkoutItemOption   (
     productOptionId bigint(20) NOT NULL,
     optionPrice  bigint(20)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='checkout 시 고객이 선택한 상품의 옵션 선택 정보';
+
+drop table if exists payment;
+create table payment
+(
+    paymentId bigint(20) NOT NULL AUTO_INCREMENT,
+    customerId bigint(20) NOT NULL,
+    checkoutId  bigint(20) NOT NULL,
+    paidDateTime datetime NOT NULL,
+    totalPrice bigint(20) NOT NULL,
+
+  primary key (`paymentId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='결제 내역';
+
+drop table if exists paymentInfo;
+create table paymentInfo
+(
+    paymentId bigint(20) NOT NULL,
+    paymentType varchar(10) NOT NULL,
+    price bigint(20) NOT NULL ,
+    accountNumber varchar(20)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='결제 방식 정보';
+
+drop table if exists purchasedOrder;
+create table purchasedOrder
+(
+    purchasedOrderId bigint(20) NOT NULL AUTO_INCREMENT,
+    customerId bigint(20),
+    purchasedOrderSnapshot varchar(1000) NOT NULL COMMENT 'yaml 형태로 모든 구매 내역에 대한 snapshot을 저장한다.',
+
+    primary key (`purchasedOrderId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='모든 구매 성공 내역';

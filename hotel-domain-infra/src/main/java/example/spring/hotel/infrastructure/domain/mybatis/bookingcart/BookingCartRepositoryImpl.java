@@ -4,6 +4,7 @@ import example.spring.hotel.domain.model.bookingcart.*;
 import example.spring.hotel.domain.model.product.Product;
 import example.spring.hotel.domain.model.product.ProductRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,28 +52,25 @@ public class BookingCartRepositoryImpl implements BookingCartRepository {
         return item;
     }
 
-    @Override
-    public List<BookingCartItem> findByCustomerIdAndProductId(Long customerId, Long productId) {
-        return mapper.findByCustomerIdAndProductId(customerId, productId);
-    }
-
-    public void insertBookingCartItem(BookingCartItem item) {
-        mapper.insertBookingCartItem(item);
+    public void insertBookingCartItem(BookingCartItem bookingCartItem) {
+        mapper.insertBookingCartItem(bookingCartItem);
     }
 
     public void insertBookingCartItemOption(BookingCartItemOption option)   {
-        mapper.deleteBookingCartItemOptionByCartItemId(option.getCartItemId());
-        mapper.insertBookingCartProductOption(option);
+        mapper.deleteBookingCartItemOptionsByCartItemId(option.getCartItemId());
+        mapper.insertBookingCartItemOption(option);
     }
 
     @Override
+    @Transactional
     public void deleteBookingCartItemByCartItemId(Long cartItemId) {
-        mapper.deleteBookingCartItemOptionByCartItemId(cartItemId);
+        mapper.deleteBookingCartItemOptionsByCartItemId(cartItemId);
+        mapper.deleteBookingCartItemByCartItemId(cartItemId);
     }
 
     @Override
-    public void deleteBookingCartItemByCustomerId(Long customerId) {
-        mapper.deleteBookingCartItemByCustomerId(customerId);
+    public void deleteBookingCartItemsByCustomerId(Long customerId) {
+        mapper.deleteBookingCartItemOptionsByCustomerId(customerId);
+        mapper.deleteBookingCartItemsByCustomerId(customerId);
     }
-
 }

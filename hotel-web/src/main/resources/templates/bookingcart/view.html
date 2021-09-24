@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+</head>
+<body>
+<tr th:each="cartItem : ${cartItems}">
+    <td>cartItemId</td><td th:text="${cartItem.cartItemId}"></td>
+    <td>customerId</td><td th:text="${cartItem.customerId}"></td>
+    <td>productName</td><td th:text="${cartItem.product.productName}"></td>
+</tr>
+</body>
+</html>

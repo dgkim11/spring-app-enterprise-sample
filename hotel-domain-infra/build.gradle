@@ -1,4 +1,5 @@
 // integration, functional test 설정
+
 sourceSets {
     integrationTest {
         compileClasspath += sourceSets.test.runtimeClasspath
@@ -22,6 +23,7 @@ task integrationTest(type: Test) {
     // integration test를 위한 spock report 위치
     systemProperty 'com.athaydes.spockframework.report.outputDir', 'build/spock-integration-test-reports'
 
+    // integration 및 functional test를 위한 spring active profile 설정
     if(project.hasProperty('production'))  {
         systemProperty "spring.profiles.active", "production"
     } else if(project.hasProperty('develop'))   {
@@ -36,6 +38,10 @@ dependencies {
     implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.0'
     implementation 'org.apache.commons:commons-dbcp2:2.9.0'
     implementation 'mysql:mysql-connector-java:8.0.26'
+    implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '3.0.0'
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'

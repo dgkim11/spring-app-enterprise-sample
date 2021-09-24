@@ -57,12 +57,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    @Transactional
-    public int deleteProductOptionsByProductId(Long productId) {
-        return productMapper.deleteProductOptionsByProductId(productId);
-    }
-
-    @Override
     public List<Product> findAllValidProductsWithoutOptions() {
         return productMapper.findAllValidProductsWithoutOptions();
     }
