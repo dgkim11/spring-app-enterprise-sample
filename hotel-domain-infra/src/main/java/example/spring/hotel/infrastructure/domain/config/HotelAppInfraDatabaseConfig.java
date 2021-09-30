@@ -27,6 +27,7 @@ public class HotelAppInfraDatabaseConfig {
     private String password;
     @Value("${datasource.schema}")
     private String schema;
+
     @Bean
     public DataSource dataSoruce()  {
         BasicDataSource dataSource = new BasicDataSource();

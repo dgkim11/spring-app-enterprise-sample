@@ -38,7 +38,6 @@ dependencies {
     implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.2.0'
     implementation 'org.apache.commons:commons-dbcp2:2.9.0'
     implementation 'mysql:mysql-connector-java:8.0.26'
-    implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '3.0.0'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.5'
