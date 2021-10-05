@@ -25,6 +25,8 @@ class BookingCartIntegrationTest extends Specification  {
     private Product product2
 
     def setup() {
+        new Product(productId: 1L, productName: "fgf")
+
         String productName1 = "BookingCartIntegrationTest.productNoOption1";
         String productName2 = "BookingCartIntegrationTest.productNoOption2";
         productHelper.deleteProductByName(productName1)

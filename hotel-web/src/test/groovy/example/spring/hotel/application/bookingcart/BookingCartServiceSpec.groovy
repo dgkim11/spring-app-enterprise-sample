@@ -21,7 +21,7 @@ class BookingCartServiceSpec extends Specification {
         productRepository.findById(_) >> Optional.of(product)
 
         when: "장바구니에 상품을 넣는다."
-        BookingCart bookingCart = bookingCartService.addToCart(1L, product.getProductId())
+        BookingCart bookingCart = bookingCartService.addToCart(1L, product.getProductId(), LocalDateTime.now())
 
         then: "장바구니에 물건이 들어가 있다."
         bookingCart.getBookingCartItems().size() == 1
@@ -39,7 +39,7 @@ class BookingCartServiceSpec extends Specification {
         productRepository.findById(_) >> Optional.of(product)
 
         when: "추가로 상품을 담는다."
-        bookingCartService.addToCart(1L, product.getProductId())
+        bookingCartService.addToCart(1L, product.getProductId(), LocalDateTime.now())
 
         then: "기존 상품과 추가한 상품이 장바구니에 있다."
         old(cart.getBookingCartItems().size()) == 1

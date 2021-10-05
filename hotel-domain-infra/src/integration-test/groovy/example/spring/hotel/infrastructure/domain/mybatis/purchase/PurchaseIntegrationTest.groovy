@@ -33,7 +33,7 @@ class PurchaseIntegrationTest extends Specification {
     def cleanup()   {
         productHelper.deleteProductByName(product1.getProductName())
         productHelper.deleteProductByName(product2.getProductName())
-        mapper.deleteByCustomerId(order.getPurchasedOrderId())
+        mapper.deleteById(order.getPurchasedOrderId())
     }
 
     def "order를 성공적으로 저장하고 조회한다."()    {
@@ -52,6 +52,7 @@ class PurchaseIntegrationTest extends Specification {
 
     private PurchasedOrder createOrder()    {
         return PurchasedOrder.builder()
+                        .customerId(1L)
                         .totalPrice(100000L)
                         .purchasedDateTime(LocalDateTime.now())
                         .purchasedProducts([

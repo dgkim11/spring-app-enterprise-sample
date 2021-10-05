@@ -4,8 +4,6 @@ import example.spring.hotel.domain.service.event.DomainEvent;
 import example.spring.hotel.domain.service.event.DomainEventConsumer;
 import example.spring.hotel.domain.service.event.AbstractEventBroker;
 import example.spring.hotel.domain.service.event.EventChannel;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -46,15 +44,15 @@ public class KafkaEventBroker extends AbstractEventBroker {
 
     @Override
     public void sendEvent(String eventKey, DomainEvent event) {
-        Properties config = new Properties();
-        try {
-            config.put("client.id", InetAddress.getLocalHost().getHostName());
-            config.put("bootstrap.servers", "host1:9092,host2:9092");
-            config.put("acks", "all");
-            new KafkaProducer(config);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+//        Properties config = new Properties();
+//        try {
+//            config.put("client.id", InetAddress.getLocalHost().getHostName());
+//            config.put("bootstrap.servers", "host1:9092,host2:9092");
+//            config.put("acks", "all");
+//            new KafkaProducer(config);
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
 
     }
 }
