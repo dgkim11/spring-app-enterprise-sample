@@ -126,13 +126,16 @@ Mock Server를 사용하여 가상의 외부 시스템을 구성할 수 있다.
 
 ### Test 코드 작성 가이드
 * Test case 작성 순서
-  * 첫째, 먼저 application layer에서 하나의 business use case에 대한 unit test case를 정의한다. 예제에서는 xxxSpec으로 끝나는 test들이다.
-  이 test case를 작성하면서 관련 구현 코드를 application, domain, infra 등등에 구현한다. 그 다음으로는 business use case가 아니라 
-  그 use case를 구성하고 있는 클래스들에 대한 단위 테스트를 만든다.
-  * 둘째, integration test를 작성한다. repository나 외부 시스템과의 연동이 제대로 되는지 테스트한다.
-  * 셋째, functional test로서 business use case에 대해서 가장 상위에서 가장 실제와 같은 환경에서 전체를 테스트하는 코드를 작성한다. 예로, MVC
-  의 Controller를 테스트하는 것이 여기에 해당한다. 실제로 애플리케이션이 로딩이 된 상태에서 테스트가 이루어진다. 
-  
+  * 첫째, business use case를 정의하고 거기에 맞는 AC(acceptance criteria)를 정의한다.
+  * 둘째, AC는 application layer내에 unit test로 정의한다.
+  * 셋째, 하나의 AC에 대해서 given/when/then을 정의하고 거기에 맞는 domain model, domain service를 구현한다. 
+  * 넷째, domain model, domain service에 대해서 unit test를 작성하고 코드를 구현해가면서 test case와 구현로직을 완성시킨다.
+  * 다섯째, application layer에 있는 application service에 대한 unit test를 정의하고 코드를 구현해 나간다. 이중에 application layer에서 
+  테스트하기 어려운 case는 functional test case로 이동시킨다. 
+  * 여섯째, integration test를 작성한다. repository나 외부 시스템과의 연동이 제대로 되는지 테스트한다.
+  * 일곱째, functional test로서 business use case에 대해서 가장 상위에서 가장 실제와 같은 환경에서 전체를 테스트하는 코드를 작성한다. 예로, MVC
+    의 Controller를 테스트하는 것이 여기에 해당한다. 실제로 애플리케이션이 로딩이 된 상태에서 테스트가 이루어진다.
+    
 * Test case 작성 핵심
   TDD에서 말하듯이 test case -> 구현 -> 리팩토링 형태로 하나의 test case와 관련된 코드만을 작성한다.하나의 test case를 작성하면서 구현되는 코드 
   이외에는 추가적인 코드를 작성하지 않는다. 해당 test case와 무관한 로직이 생각났다고 바로 작성하게되면 그 부분은 나중에 test case에서 빠질 수 있다. 
